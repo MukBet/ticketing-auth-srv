@@ -5,19 +5,20 @@ on:
     branches:
       - main
     paths:
-      - './**'
+      - '**'
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
+
       - run: docker build -t archiepeey/auth .
-      - run: docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
+
+      - name: Docker login
+        run: echo "${DOCKER_PASSWORD}" | docker login -u "${DOCKER_USERNAME}" --password-stdin
         env:
-          DOCKER_USERNAME: ${{ secrets.$DOCKER_USERNAME }}
-          DOCKER_PASSWORD: ${{ secrets.$DOCKER_PASSWORD }}
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+
       - run: docker push archiepeey/auth
-          
-    
-    
